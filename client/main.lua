@@ -1,3 +1,7 @@
+if not LoadResourceFile(lib.name, 'web/build/index.html') then
+	error('Unable to load UI. Build ox_doorlock or download the latest release.\n	^3https://github.com/overextended/ox_doorlock/releases/latest/download/ox_doorlock.zip^0')
+end
+
 lib.locale()
 TriggerServerEvent('ox_doorlock:getDoors')
 
@@ -183,18 +187,21 @@ RegisterNetEvent('ox_doorlock:editDoorlock', function(id, data)
 
 		-- hacky method to resolve a bug with "closest door" by forcing a distance recalculation
 		if door.distance < 20 then door.distance = 80 end
+	elseif ClosestDoor?.id == id then
+		ClosestDoor = nil
 	end
 
 	if double then
 		for i = 1, 2 do
-			if doorRate then
-				DoorSystemSetAutomaticRate(double[i].hash, doorRate, false, false)
-			end
+			if data then
+				if doorRate then
+					DoorSystemSetAutomaticRate(double[i].hash, doorRate, false, false)
+				end
 
-			DoorSystemSetDoorState(double[i].hash, doorState, false, false)
-
-			if not data then
-				RemoveDoorFromSystem(double[i].hash)
+				DoorSystemSetDoorState(double[i].hash, doorState, false, false)
+			else
+				DoorSystemSetDoorState(double[i].hash, 4, false, false)
+				DoorSystemSetDoorState(double[i].hash, 0, false, false)
 
 				if double[i].entity then
 					Entity(double[i].entity).state.doorId = nil
@@ -202,14 +209,15 @@ RegisterNetEvent('ox_doorlock:editDoorlock', function(id, data)
 			end
 		end
 	else
-		if doorRate then
-			DoorSystemSetAutomaticRate(door.hash, doorRate, false, false)
-		end
+		if data then
+			if doorRate then
+				DoorSystemSetAutomaticRate(door.hash, doorRate, false, false)
+			end
 
-		DoorSystemSetDoorState(door.hash, doorState, false, false)
-
-		if not data then
-			RemoveDoorFromSystem(door.hash)
+			DoorSystemSetDoorState(door.hash, doorState, false, false)
+		else
+			DoorSystemSetDoorState(door.hash, 4, false, false)
+			DoorSystemSetDoorState(door.hash, 0, false, false)
 
 			if door.entity then
 				Entity(door.entity).state.doorId = nil
