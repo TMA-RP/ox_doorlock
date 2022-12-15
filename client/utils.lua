@@ -21,7 +21,11 @@ end
 local pickingLock
 
 local function canPickLock(entity)
-	return not pickingLock and getDoorFromEntity(entity)?.lockpick
+	if pickingLock then return false end
+
+	local door = getDoorFromEntity(entity)
+
+	return door and door.lockpick and (Config.CanPickUnlockedDoors or door.state == 1)
 end
 
 local function pickLock(entity)
