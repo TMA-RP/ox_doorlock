@@ -258,6 +258,8 @@ RegisterNetEvent('ox_doorlock:setState', function(id, state, lockpick, passcode)
 		source = nil
 	end
 
+	state = (state == 1 or state == 0) and state or (state and 1 or 0)
+
 	if door then
 		local authorised = source == nil or isAuthorised(source, door, lockpick, passcode)
 
@@ -278,9 +280,11 @@ RegisterNetEvent('ox_doorlock:setState', function(id, state, lockpick, passcode)
 
 			return TriggerEvent('ox_doorlock:stateChanged', source, door.id, state == 1, type(authorised) == 'string' and authorised)
 		end
-	end
 
-    lib.notify(source, { type = 'error', icon = 'lock', description = state == 0 and 'cannot_unlock' or 'cannot_lock' })
+		if source then
+			lib.notify(source, { type = 'error', icon = 'lock', description = state == 0 and 'cannot_unlock' or 'cannot_lock' })
+		end
+	end
 end)
 
 RegisterNetEvent('ox_doorlock:getDoors', function()
