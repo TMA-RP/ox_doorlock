@@ -73,7 +73,7 @@ do
 		}
 	end
 
-	if target.ox then
+	if target and target.ox then
 		target.exp:addGlobalObject({
 			{
 				name = 'pickDoorlock',
@@ -85,7 +85,7 @@ do
 				distance = 1
 			}
 		})
-	else
+	elseif target then
 		local options = {
 			{
 				label = locale('pick_lock'),
