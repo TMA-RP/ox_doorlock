@@ -24,6 +24,10 @@ local function createDoor(door)
 		DoorSystemSetDoorState(door.hash, 4, false, false)
 		DoorSystemSetDoorState(door.hash, door.state, false, false)
 
+        if door.id >= 166 and door.id <= 168 then
+            DoorSystemSetHoldOpen(door.hash, true)
+        end
+
 		if door.doorRate then
 			DoorSystemSetAutomaticRate(door.hash, door.doorRate, false, false)
 		end
