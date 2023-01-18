@@ -73,36 +73,38 @@ do
 		}
 	end
 
-	if target and target.ox then
-		target.exp:addGlobalObject({
-			{
-				name = 'pickDoorlock',
-				label = locale('pick_lock'),
-				icon = 'fas fa-user-lock',
-				onSelect = pickLock,
-				canInteract = canPickLock,
-				items = 'lockpick',
-				distance = 1
-			}
-		})
-	elseif target then
-		local options = {
-			{
-				label = locale('pick_lock'),
-				icon = 'fas fa-user-lock',
-				action = pickLock,
-				canInteract = canPickLock,
-				item = 'lockpick',
-				distance = 1
-			}
-		}
-
-		if target.qt then
-			target.exp:Object({ options = options })
-		elseif target.qb then
-			target.exp:AddGlobalObject({ options = options })
-		end
-	end
+    if target ~= nil then
+        if target.ox then
+            target.exp:addGlobalObject({
+                {
+                    name = 'pickDoorlock',
+                    label = locale('pick_lock'),
+                    icon = 'fas fa-user-lock',
+                    onSelect = pickLock,
+                    canInteract = canPickLock,
+                    items = 'lockpick',
+                    distance = 1
+                }
+            })
+        else
+            local options = {
+                {
+                    label = locale('pick_lock'),
+                    icon = 'fas fa-user-lock',
+                    action = pickLock,
+                    canInteract = canPickLock,
+                    item = 'lockpick',
+                    distance = 1
+                }
+            }
+    
+            if target.qt then
+                target.exp:Object({ options = options })
+            elseif target.qb then
+                target.exp:AddGlobalObject({ options = options })
+            end
+        end
+    end
 end
 
 local tempData = {}
