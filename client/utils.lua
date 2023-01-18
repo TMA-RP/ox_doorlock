@@ -273,16 +273,18 @@ RegisterNetEvent('ox_doorlock:triggeredCommand', function(closest)
 	openUi(closest and ClosestDoor?.id or nil)
 end)
 
-if not target.ox then
-	AddEventHandler('onResourceStop', function(resource)
-		if resource == 'ox_doorlock' then
-			local options = { locale('add_lock'), locale('pick_lock') }
-
-			if target.qt then
-				target.exp:RemoveObject(options)
-			elseif target.qb then
-				target.exp:RemoveGlobalObject(options)
-			end
-		end
-	end)
+if target ~= nil then
+    if not target.ox then
+        AddEventHandler('onResourceStop', function(resource)
+            if resource == 'ox_doorlock' then
+                local options = { locale('add_lock'), locale('pick_lock') }
+    
+                if target.qt then
+                    target.exp:RemoveObject(options)
+                elseif target.qb then
+                    target.exp:RemoveGlobalObject(options)
+                end
+            end
+        end)
+    end
 end
