@@ -99,13 +99,13 @@ RegisterNetEvent('ox_doorlock:setDoors', function(data, sounds)
 							GetOffsetFromEntityInWorldCoords(entity, max.x, max.y, min.z).xy
 						}
 
-						local centroid = vec(0, 0)
+						local centroid = vec2(0, 0)
 
 						for i = 1, 8 do
 							centroid += points[i]
 						end
 
-						centroid /= 8
+						centroid = centroid / 8
 						door.coords = vec3(centroid.x, centroid.y, door.coords.z)
 						door.entity = entity
 						Entity(entity).state.doorId = door.id
@@ -246,9 +246,32 @@ RegisterNetEvent('ox_doorlock:editDoorlock', function(id, data)
 end)
 
 ClosestDoor = nil
+local lastTriggered = 0
+
+local function useClosestDoor()
+	if not ClosestDoor then return false end
+
+	if ClosestDoor.passcode then
+		local input = lib.inputDialog(locale('door_lock'), {
+			{ type = "input", label = locale("passcode"), password = true, icon = 'lock' },
+		})
+
+		if input then
+			TriggerServerEvent('ox_doorlock:setState', ClosestDoor.id, ClosestDoor.state == 1 and 0 or 1, false, input[1])
+		end
+	else
+		local gameTimer = GetGameTimer()
+
+		if gameTimer - lastTriggered > 500 then
+			lastTriggered = gameTimer
+			TriggerServerEvent('ox_doorlock:setState', ClosestDoor.id, ClosestDoor.state == 1 and 0 or 1)
+		end
+	end
+end
+
+exports('useClosestDoor', useClosestDoor)
 
 CreateThread(function()
-	local lastTriggered = 0
 	local lockDoor = locale('lock_door')
 	local unlockDoor = locale('unlock_door')
 	local showUI
@@ -297,7 +320,6 @@ CreateThread(function()
 			end
 		else ClosestDoor = nil end
 
-
 		if ClosestDoor and ClosestDoor.distance < ClosestDoor.maxDistance then
 			if Config.DrawTextUI and not ClosestDoor.hideUi and ClosestDoor.state ~= showUI then
 				lib.showTextUI(ClosestDoor.state == 0 and lockDoor or unlockDoor)
@@ -305,22 +327,7 @@ CreateThread(function()
 			end
 
 			if IsDisabledControlJustReleased(0, 38) then
-				if ClosestDoor.passcode then
-					local input = lib.inputDialog(locale('door_lock'), {
-						{ type = "input", label = locale("passcode"), password = true, icon = 'lock' },
-					})
-
-					if input then
-						TriggerServerEvent('ox_doorlock:setState', ClosestDoor.id, ClosestDoor.state == 1 and 0 or 1, false, input[1])
-					end
-				else
-					local gameTimer = GetGameTimer()
-
-					if gameTimer - lastTriggered > 500 then
-						lastTriggered = gameTimer
-						TriggerServerEvent('ox_doorlock:setState', ClosestDoor.id, ClosestDoor.state == 1 and 0 or 1)
-					end
-				end
+				useClosestDoor()
 			end
 		elseif showUI then
 			lib.hideTextUI()
