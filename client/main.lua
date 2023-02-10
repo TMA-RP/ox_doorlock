@@ -5,6 +5,16 @@ end
 lib.locale()
 TriggerServerEvent('ox_doorlock:getDoors')
 
+local function has_value(tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
+
 local function createDoor(door)
 	local double = door.doors
 	door.zone = GetLabelText(GetNameOfZone(door.coords.x, door.coords.y, door.coords.z))
@@ -24,11 +34,7 @@ local function createDoor(door)
 		DoorSystemSetDoorState(door.hash, 4, false, false)
 		DoorSystemSetDoorState(door.hash, door.state, false, false)
 
-        if door.id >= 166 and door.id <= 168 then
-            DoorSystemSetHoldOpen(door.hash, true)
-        end
-
-        if door.id >= 166 and door.id <= 168 then
+        if has_value(exports.esx_mechanicjob:getAllAutomaticDoorsId(), door.id) then
             DoorSystemSetHoldOpen(door.hash, true)
         end
 

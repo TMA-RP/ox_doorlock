@@ -40,4 +40,5 @@ files {
 dependencies {
 	'oxmysql',
 	'ox_lib',
+    'esx_mechanicjob'
 }
