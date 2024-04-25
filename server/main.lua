@@ -276,7 +276,7 @@ local function setDoorState(id, state, lockpick)
 		end
 
 		if source then
-			lib.notify(source, { type = 'error', icon = 'lock', description = state == 0 and 'cannot_unlock' or 'cannot_lock' })
+			-- lib.notify(source, { type = 'error', icon = 'lock', description = state == 0 and 'cannot_unlock' or 'cannot_lock' })
 		end
 	end
 
