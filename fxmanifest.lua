@@ -6,7 +6,7 @@ lua54 'yes'
 game 'gta5'
 
 --[[ Resource Information ]]
-                             --
+--
 name 'ox_doorlock'
 version '1.16.1'
 license 'GPL-3.0-or-later'
@@ -44,6 +44,11 @@ files {
 
 data_file 'AUDIO_WAVEPACK' 'audio/dlc_oxdoorlock'
 data_file 'AUDIO_SOUNDDATA' 'audio/data/oxdoorlock_sounds.dat'
+
+dependencies {
+    'oxmysql',
+    'ox_lib',
+}
 
 ox_libs {
     'locale',
