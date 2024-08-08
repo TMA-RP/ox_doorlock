@@ -314,7 +314,7 @@ CreateThread(function()
 
                 if door.distance < door.maxDistance then
                     local isValid = true
-                    if door.id == 732 or door.id == 733 then
+                    if door.id == 442 or door.id == 443 then
                         local coords = GetEntityCoords(cache.ped)
                         if coords.z > 29.6919 then
                             isValid = false
